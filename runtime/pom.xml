@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.github.quarkus.oidc</groupId>
+		<artifactId>quarkus-oidc-parent</artifactId>
+		<version>2019.9.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>quarkus-oidc</artifactId>
+	<name>OIDC Extension - Runtime</name>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-smallrye-jwt</artifactId>
+			<version>${quarkus.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>oauth2-oidc-sdk</artifactId>
+			<version>${nimbus.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.ow2.asm</groupId>
+					<artifactId>asm</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.oracle.substratevm</groupId>
+			<artifactId>svm</artifactId>
+			<version>${graal-sdk.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>net.minidev</groupId>
+			<artifactId>accessors-smart</artifactId>
+			<version>1.2</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- referenced but not used by json-smart but GRAAL will complain if it 
+			is not on the classpath -->
+
+
+
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm</artifactId>
+			<version>${asm.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+
+		<!-- <dependency> <groupId>org.wildfly.security</groupId> <artifactId>wildfly-elytron-realm-token</artifactId> 
+			<version>${wildfly-elytron.version}</version> </dependency> <dependency> 
+			<groupId>io.quarkus</groupId> <artifactId>quarkus-core</artifactId> <version>${quarkus.version}</version> 
+			</dependency> <dependency> <groupId>io.quarkus</groupId> <artifactId>quarkus-elytron-security</artifactId> 
+			<version>${quarkus.version}</version> </dependency> <dependency> <groupId>io.quarkus</groupId> 
+			<artifactId>quarkus-undertow</artifactId> <version>${quarkus.version}</version> 
+			</dependency> <dependency> <groupId>io.quarkus</groupId> <artifactId>quarkus-undertow</artifactId> 
+			<version>${quarkus.version}</version> </dependency> -->
+
+		<!-- <dependency> <groupId>org.jboss.spec.javax.servlet</groupId> <artifactId>jboss-servlet-api_4.0_spec</artifactId> 
+			</dependency> -->
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>io.quarkus</groupId>
+				<artifactId>quarkus-bootstrap-maven-plugin</artifactId>
+				<version>${quarkus.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>extension-descriptor</goal>
+						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<deployment>${project.groupId}:${project.artifactId}-deployment:${project.version}
+							</deployment>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>io.quarkus</groupId>
+							<artifactId>quarkus-extension-processor</artifactId>
+							<version>${quarkus.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

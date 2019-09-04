@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.github.quarkus.oidc</groupId>
+	<artifactId>quarkus-oidc-parent</artifactId>
+	<version>2019.9.0-SNAPSHOT</version>
+	<name>OIDC Extension - Parent</name>
+
+	<properties>
+		<quarkus.version>0.21.1</quarkus.version>
+		<nimbus.version>6.14</nimbus.version>
+		<graal-sdk.version>19.2.0</graal-sdk.version>
+		 <asm.version>7.1</asm.version>
+		<!-- update to 11+ when GRAALVM supports it -->
+		<maven.compiler.source>8</maven.compiler.source>
+		<maven.compiler.target>8</maven.compiler.target>
+	</properties>
+
+	<packaging>pom</packaging>
+	<modules>
+		<module>deployment</module>
+		<module>runtime</module>
+	</modules>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+				<!-- update to 11+ when GRAALVM supports it -->
+					<release>8</release>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+
+</project>
