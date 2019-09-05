@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-    <title>Quarkus React OIDC Example</title>
+    <title><%= htmlWebpackPlugin.options.title %></title>
 
     <style>
         h1, h2, h3, h4, h5, h6 {
@@ -99,8 +99,8 @@
     </style>
   </head>
   <body>
-    
-      <div id="quarkus-container"></div>
-    
-  <script type="text/javascript" src="quarkus-react.js"></script></body>
+    <% if (htmlWebpackPlugin.options.appMountId) { %>
+      <div id="<%= htmlWebpackPlugin.options.appMountId%>"></div>
+    <% } %>
+  </body>
 </html>

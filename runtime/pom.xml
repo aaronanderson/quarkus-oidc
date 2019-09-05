@@ -52,8 +52,6 @@
 		<!-- referenced but not used by json-smart but GRAAL will complain if it 
 			is not on the classpath -->
 
-
-
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm</artifactId>
@@ -62,17 +60,7 @@
 		</dependency>
 
 
-		<!-- <dependency> <groupId>org.wildfly.security</groupId> <artifactId>wildfly-elytron-realm-token</artifactId> 
-			<version>${wildfly-elytron.version}</version> </dependency> <dependency> 
-			<groupId>io.quarkus</groupId> <artifactId>quarkus-core</artifactId> <version>${quarkus.version}</version> 
-			</dependency> <dependency> <groupId>io.quarkus</groupId> <artifactId>quarkus-elytron-security</artifactId> 
-			<version>${quarkus.version}</version> </dependency> <dependency> <groupId>io.quarkus</groupId> 
-			<artifactId>quarkus-undertow</artifactId> <version>${quarkus.version}</version> 
-			</dependency> <dependency> <groupId>io.quarkus</groupId> <artifactId>quarkus-undertow</artifactId> 
-			<version>${quarkus.version}</version> </dependency> -->
-
-		<!-- <dependency> <groupId>org.jboss.spec.javax.servlet</groupId> <artifactId>jboss-servlet-api_4.0_spec</artifactId> 
-			</dependency> -->
+	
 
 	</dependencies>
 

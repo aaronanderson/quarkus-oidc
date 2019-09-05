@@ -1,4 +1,4 @@
-package com.mercer.digital.quarkus.oidc.runtime.graal;
+package com.github.quarkus.oidc.runtime.graal;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

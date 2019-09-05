@@ -160,9 +160,7 @@ public class OIDCAuthMechanism implements AuthenticationMechanism {
 
                 // Install the JWT principal as the caller
                 Account account = identityManager.verify(credential.getName(), credential);
-                if (account != null) {
-                    PrincipalProducer principalProducer = CDI.current().select(PrincipalProducer.class).get();
-                    principalProducer.setJsonWebToken((JsonWebToken) account.getPrincipal());
+                if (account != null) {                    
                     //set cachingRequired to set authentication in session cookie
                     boolean cachingRequired = authContextInfo.isSessionEnabled();
                     exchange.getSecurityContext().authenticationComplete(account, authContextInfo.getAuthMechanism(), cachingRequired);
