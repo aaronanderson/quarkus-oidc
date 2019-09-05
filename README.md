@@ -36,9 +36,9 @@ Include the Quarkus OIDC extension in the projects Maven POM file
 
 ```
 <dependency>
-			<groupId>com.github.quarkus.oidc</groupId>
-			<artifactId>quarkus-oidc</artifactId>
-			<version>2019.9.0-SNAPSHOT</version>
+	<groupId>com.github.quarkus.oidc</groupId>
+	<artifactId>quarkus-oidc</artifactId>
+	<version>2019.9.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -64,7 +64,7 @@ quarkus.oidc.client-secret=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 * quarkus.oidc.client-id - The OIDC/OAuth 2.0 application client ID 
 
-* quarkus.oidc.client-secret - The OIDC/OAuth 2.0 application client ID
+* quarkus.oidc.client-secret - The OIDC/OAuth 2.0 application secret
 
 
 There are a few other optional properties that can be configured:
