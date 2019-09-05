@@ -11,6 +11,8 @@ import javax.servlet.SessionTrackingMode;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import io.smallrye.jwt.auth.cdi.PrincipalProducer;
+import io.undertow.security.api.AuthenticatedSessionManager;
+import io.undertow.security.api.AuthenticatedSessionManager.AuthenticatedSession;
 import io.undertow.security.idm.Account;
 import io.undertow.server.HandlerWrapper;
 import io.undertow.server.HttpHandler;
@@ -49,8 +51,12 @@ public class OIDCAuthMethodExtension implements ServletExtension {
 			// available cookies content requests.
 			// deploymentInfo.setSessionPersistenceManager(new
 			// InMemorySessionPersistence());
-			deploymentInfo.setServletSessionConfig(new ServletSessionConfig()
-					.setSessionTrackingModes(Stream.of(SessionTrackingMode.COOKIE).collect(Collectors.toSet())));
+			deploymentInfo.setServletSessionConfig(new ServletSessionConfig().setSessionTrackingModes(Stream.of(SessionTrackingMode.COOKIE).collect(Collectors.toSet())));
+			deploymentInfo.setDefaultSessionTimeout(info.getDefaultSessionTimeout());
+			if (info.isSyncSessionExpiration()) {
+				//invoked before authentication is assessed so that session can be cleared if the cached JWT token has expired 
+				deploymentInfo.addSecurityWrapper(new SessionSyncWrapper());
+			}
 		}
 
 		deploymentInfo.addInnerHandlerChainWrapper(new JWTHandlerWrapper());
@@ -60,7 +66,7 @@ public class OIDCAuthMethodExtension implements ServletExtension {
 
 	}
 
-	static class JWTHandlerWrapper implements HandlerWrapper {
+	class JWTHandlerWrapper implements HandlerWrapper {
 		@Override
 		public HttpHandler wrap(final HttpHandler handler) {
 			return new HttpHandler() {
@@ -70,8 +76,34 @@ public class OIDCAuthMethodExtension implements ServletExtension {
 					if (account != null && account.getPrincipal() instanceof JsonWebToken) {
 						PrincipalProducer principalProducer = CDI.current().select(PrincipalProducer.class).get();
 						principalProducer.setJsonWebToken((JsonWebToken) account.getPrincipal());
-						handler.handleRequest(exchange);
 					}
+					handler.handleRequest(exchange);
+				}
+			};
+		}
+	}
+
+	class SessionSyncWrapper implements HandlerWrapper {
+		@Override
+		public HttpHandler wrap(final HttpHandler handler) {
+			return new HttpHandler() {
+				@Override
+				public void handleRequest(HttpServerExchange exchange) throws Exception {
+					AuthenticatedSessionManager sessionManager = exchange.getAttachment(AuthenticatedSessionManager.ATTACHMENT_KEY);
+					if (sessionManager != null) {
+						AuthenticatedSession authSession = sessionManager.lookupSession(exchange);
+						if (authSession != null) {
+							Account account = authSession.getAccount();
+							if (account != null && account.getPrincipal() instanceof JsonWebToken) {
+								JsonWebToken jwt = (JsonWebToken) account.getPrincipal();
+								if (System.currentTimeMillis() > jwt.getExpirationTime() * 1000) {
+									sessionManager.clearSession(exchange);
+								}
+							}
+						}
+					}
+
+					handler.handleRequest(exchange);
 				}
 			};
 		}

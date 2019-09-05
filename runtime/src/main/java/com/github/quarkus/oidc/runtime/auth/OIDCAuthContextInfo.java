@@ -14,185 +14,203 @@ import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.openid.connect.sdk.ClaimsRequest;
 import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
 
+import io.quarkus.runtime.annotations.ConfigItem;
 import io.smallrye.jwt.auth.principal.JWTAuthContextInfo;
 import io.undertow.servlet.api.SecurityConstraint;
 
 @ApplicationScoped
 public class OIDCAuthContextInfo extends JWTAuthContextInfo {
 
-    private ClientID clientId;
-    private Issuer issuer;
-    private URI authURI;
-    private URI tokenURI;
-    private URI userInfoURI;
-    private JWKSet rsaKeys;
-    private Scope scope;
-    private ClaimsRequest claims;
-    private ResponseType responseType;
-    private boolean checkNonce;
-    private String aesCryptProvider;
-    private SecretKey stateKey;
-    private IDTokenValidator rsaTokenValidator;
-    private IDTokenValidator hmacTokenValidator;
-    private String authMechanism;
-    private String redirectPath;
-    private boolean sessionEnabled;
-    private List<SecurityConstraint> securityConstraints;
+	private ClientID clientId;
+	private Issuer issuer;
+	private URI authURI;
+	private URI tokenURI;
+	private URI userInfoURI;
+	private JWKSet rsaKeys;
+	private Scope scope;
+	private ClaimsRequest claims;
+	private ResponseType responseType;
+	private boolean checkNonce;
+	private String aesCryptProvider;
+	private SecretKey stateKey;
+	private IDTokenValidator rsaTokenValidator;
+	private IDTokenValidator hmacTokenValidator;
+	private String authMechanism;
+	private String redirectPath;
+	private boolean sessionEnabled;
+	public boolean syncSessionExpiration;
+	public int defaultSessionTimeout;
 
-    private String defaultJWT;
+	private List<SecurityConstraint> securityConstraints;
 
-    public ClientID getClientId() {
-        return clientId;
-    }
+	private String defaultJWT;
 
-    public void setClientId(ClientID clientId) {
-        this.clientId = clientId;
-    }
+	public ClientID getClientId() {
+		return clientId;
+	}
 
-    public Issuer getIssuer() {
-        return issuer;
-    }
+	public void setClientId(ClientID clientId) {
+		this.clientId = clientId;
+	}
 
-    public void setIssuer(Issuer issuer) {
-        this.issuer = issuer;
-    }
+	public Issuer getIssuer() {
+		return issuer;
+	}
 
-    public URI getAuthURI() {
-        return authURI;
-    }
+	public void setIssuer(Issuer issuer) {
+		this.issuer = issuer;
+	}
 
-    public void setAuthURI(URI authURI) {
-        this.authURI = authURI;
-    }
+	public URI getAuthURI() {
+		return authURI;
+	}
 
-    public URI getTokenURI() {
-        return tokenURI;
-    }
+	public void setAuthURI(URI authURI) {
+		this.authURI = authURI;
+	}
 
-    public void setTokenURI(URI tokenURI) {
-        this.tokenURI = tokenURI;
-    }
+	public URI getTokenURI() {
+		return tokenURI;
+	}
 
-    public URI getUserInfoURI() {
-        return userInfoURI;
-    }
+	public void setTokenURI(URI tokenURI) {
+		this.tokenURI = tokenURI;
+	}
 
-    public void setUserInfoURI(URI userInfoURI) {
-        this.userInfoURI = userInfoURI;
-    }
+	public URI getUserInfoURI() {
+		return userInfoURI;
+	}
 
-    public JWKSet getRsaKeys() {
-        return rsaKeys;
-    }
+	public void setUserInfoURI(URI userInfoURI) {
+		this.userInfoURI = userInfoURI;
+	}
 
-    public void setRsaKeys(JWKSet rsaKeys) {
-        this.rsaKeys = rsaKeys;
-    }
+	public JWKSet getRsaKeys() {
+		return rsaKeys;
+	}
 
-    public Scope getScope() {
-        return scope;
-    }
+	public void setRsaKeys(JWKSet rsaKeys) {
+		this.rsaKeys = rsaKeys;
+	}
 
-    public void setScope(Scope scope) {
-        this.scope = scope;
-    }
+	public Scope getScope() {
+		return scope;
+	}
 
-    public ClaimsRequest getClaims() {
-        return claims;
-    }
+	public void setScope(Scope scope) {
+		this.scope = scope;
+	}
 
-    public void setClaims(ClaimsRequest claims) {
-        this.claims = claims;
-    }
+	public ClaimsRequest getClaims() {
+		return claims;
+	}
 
-    public ResponseType getResponseType() {
-        return responseType;
-    }
+	public void setClaims(ClaimsRequest claims) {
+		this.claims = claims;
+	}
 
-    public void setResponseType(ResponseType responseType) {
-        this.responseType = responseType;
-    }
+	public ResponseType getResponseType() {
+		return responseType;
+	}
 
-    public boolean isCheckNonce() {
-        return checkNonce;
-    }
+	public void setResponseType(ResponseType responseType) {
+		this.responseType = responseType;
+	}
 
-    public void setCheckNonce(boolean checkNonce) {
-        this.checkNonce = checkNonce;
-    }
+	public boolean isCheckNonce() {
+		return checkNonce;
+	}
 
-    public String getAesCryptProvider() {
-        return aesCryptProvider;
-    }
+	public void setCheckNonce(boolean checkNonce) {
+		this.checkNonce = checkNonce;
+	}
 
-    public void setAesCryptProvider(String aesCryptProvider) {
-        this.aesCryptProvider = aesCryptProvider;
-    }
+	public String getAesCryptProvider() {
+		return aesCryptProvider;
+	}
 
-    public SecretKey getStateKey() {
-        return stateKey;
-    }
+	public void setAesCryptProvider(String aesCryptProvider) {
+		this.aesCryptProvider = aesCryptProvider;
+	}
 
-    public void setStateKey(SecretKey stateKey) {
-        this.stateKey = stateKey;
-    }
+	public SecretKey getStateKey() {
+		return stateKey;
+	}
 
-    public IDTokenValidator getRsaTokenValidator() {
-        return rsaTokenValidator;
-    }
+	public void setStateKey(SecretKey stateKey) {
+		this.stateKey = stateKey;
+	}
 
-    public void setRsaTokenValidator(IDTokenValidator rsaTokenValidator) {
-        this.rsaTokenValidator = rsaTokenValidator;
-    }
+	public IDTokenValidator getRsaTokenValidator() {
+		return rsaTokenValidator;
+	}
 
-    public IDTokenValidator getHmacTokenValidator() {
-        return hmacTokenValidator;
-    }
+	public void setRsaTokenValidator(IDTokenValidator rsaTokenValidator) {
+		this.rsaTokenValidator = rsaTokenValidator;
+	}
 
-    public void setHmacTokenValidator(IDTokenValidator hmacTokenValidator) {
-        this.hmacTokenValidator = hmacTokenValidator;
-    }
+	public IDTokenValidator getHmacTokenValidator() {
+		return hmacTokenValidator;
+	}
 
-    public String getAuthMechanism() {
-        return authMechanism;
-    }
+	public void setHmacTokenValidator(IDTokenValidator hmacTokenValidator) {
+		this.hmacTokenValidator = hmacTokenValidator;
+	}
 
-    public void setAuthMechanism(String authMechanism) {
-        this.authMechanism = authMechanism;
-    }
+	public String getAuthMechanism() {
+		return authMechanism;
+	}
 
-    public String getRedirectPath() {
-        return redirectPath;
-    }
+	public void setAuthMechanism(String authMechanism) {
+		this.authMechanism = authMechanism;
+	}
 
-    public void setRedirectPath(String redirectPath) {
-        this.redirectPath = redirectPath;
-    }
+	public String getRedirectPath() {
+		return redirectPath;
+	}
 
-    public boolean isSessionEnabled() {
-        return sessionEnabled;
-    }
+	public void setRedirectPath(String redirectPath) {
+		this.redirectPath = redirectPath;
+	}
 
-    public void setSessionEnabled(boolean sessionEnabled) {
-        this.sessionEnabled = sessionEnabled;
-    }
+	public boolean isSessionEnabled() {
+		return sessionEnabled;
+	}
 
-    public String getDefaultJWT() {
-        return defaultJWT;
-    }
+	public void setSessionEnabled(boolean sessionEnabled) {
+		this.sessionEnabled = sessionEnabled;
+	}	
 
-    public void setDefaultJWT(String defaultJWT) {
-        this.defaultJWT = defaultJWT;
-    }
+	public boolean isSyncSessionExpiration() {
+		return syncSessionExpiration;
+	}
 
-    public List<SecurityConstraint> getSecurityConstraints() {
-        return securityConstraints;
-    }
+	public void setSyncSessionExpiration(boolean syncSessionExpiration) {
+		this.syncSessionExpiration = syncSessionExpiration;
+	}
 
-    public void setSecurityConstraints(List<SecurityConstraint> securityConstraints) {
-        this.securityConstraints = securityConstraints;
-    }
-    
-    
+	public int getDefaultSessionTimeout() {
+		return defaultSessionTimeout;
+	}
+
+	public void setDefaultSessionTimeout(int defaultSessionTimeout) {
+		this.defaultSessionTimeout = defaultSessionTimeout;
+	}
+
+	public String getDefaultJWT() {
+		return defaultJWT;
+	}
+
+	public void setDefaultJWT(String defaultJWT) {
+		this.defaultJWT = defaultJWT;
+	}
+
+	public List<SecurityConstraint> getSecurityConstraints() {
+		return securityConstraints;
+	}
+
+	public void setSecurityConstraints(List<SecurityConstraint> securityConstraints) {
+		this.securityConstraints = securityConstraints;
+	}
 
 }

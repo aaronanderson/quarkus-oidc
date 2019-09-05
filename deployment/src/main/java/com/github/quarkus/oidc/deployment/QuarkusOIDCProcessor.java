@@ -36,133 +36,137 @@ import io.undertow.servlet.ServletExtension;
 
 class QuarkusOIDCProcessor {
 
-    private static final Logger log = Logger.getLogger(QuarkusOIDCProcessor.class.getName());
+	private static final Logger log = Logger.getLogger(QuarkusOIDCProcessor.class.getName());
 
-    OIDCConfiguration config;
+	OIDCConfiguration config;
 
-    private static final String FEATURE = "oidc";
+	private static final String FEATURE = "oidc";
 
-    @BuildStep
-    FeatureBuildItem feature() {
-        return new FeatureBuildItem(FEATURE);
-    }
+	@BuildStep
+	FeatureBuildItem feature() {
+		return new FeatureBuildItem(FEATURE);
+	}
 
-//    @BuildStep
-//    SubstrateConfigBuildItem disableKeepAlive() {
-//        return new SubstrateConfigBuildItem.Builder().addNativeImageSystemProperty("http.keepAlive", "false").build();
-//    }
+	//    @BuildStep
+	//    SubstrateConfigBuildItem disableKeepAlive() {
+	//        return new SubstrateConfigBuildItem.Builder().addNativeImageSystemProperty("http.keepAlive", "false").build();
+	//    }
 
-    //    @BuildStep
-    //    void registerRuntimeInitializations(BuildProducer<RuntimeInitializedClassBuildItem> runtimeInitializer) {
-    //        runtimeInitializer.produce(new RuntimeInitializedClassBuildItem("sun.security.ssl.SSLContextImpl"));
-    //    }
+	//    @BuildStep
+	//    void registerRuntimeInitializations(BuildProducer<RuntimeInitializedClassBuildItem> runtimeInitializer) {
+	//        runtimeInitializer.produce(new RuntimeInitializedClassBuildItem("sun.security.ssl.SSLContextImpl"));
+	//    }
 
-    @BuildStep
-    void registerAdditionalBeans(BuildProducer<AdditionalBeanBuildItem> additionalBeans) {
-        AdditionalBeanBuildItem.Builder unremovable = AdditionalBeanBuildItem.builder().setUnremovable();
-        unremovable.addBeanClass(MpJwtValidator.class);
-        unremovable.addBeanClass(OIDCAuthMethodExtension.class);
-        unremovable.addBeanClass(PrincipalProducer.class);
-        additionalBeans.produce(unremovable.build());
-        AdditionalBeanBuildItem.Builder removable = AdditionalBeanBuildItem.builder();
-        removable.addBeanClass(OIDCAuthContextInfo.class);
+	@BuildStep
+	void registerAdditionalBeans(BuildProducer<AdditionalBeanBuildItem> additionalBeans) {
+		AdditionalBeanBuildItem.Builder unremovable = AdditionalBeanBuildItem.builder().setUnremovable();
+		unremovable.addBeanClass(MpJwtValidator.class);
+		unremovable.addBeanClass(OIDCAuthMethodExtension.class);
+		unremovable.addBeanClass(PrincipalProducer.class);
+		additionalBeans.produce(unremovable.build());
+		AdditionalBeanBuildItem.Builder removable = AdditionalBeanBuildItem.builder();
+		removable.addBeanClass(OIDCAuthContextInfo.class);
 
-       
-        additionalBeans.produce(removable.build());
-    }
+		additionalBeans.produce(removable.build());
+	}
 
-    @BuildStep
-    @Record(ExecutionTime.STATIC_INIT)
-    ExtensionSslNativeSupportBuildItem sslNative() {
-        return new ExtensionSslNativeSupportBuildItem(FEATURE);
+	@BuildStep
+	@Record(ExecutionTime.STATIC_INIT)
+	ExtensionSslNativeSupportBuildItem sslNative() {
+		return new ExtensionSslNativeSupportBuildItem(FEATURE);
 
-    }
+	}
 
-    /**
-    * Configure a TokenSecurityRealm if enabled
-    *
-    * @param recorder - jwt runtime recorder
-    * @param securityRealm - producer used to register the TokenSecurityRealm
-    * @param container - the BeanContainer for creating CDI beans
-    * @param reflectiveClasses - producer to register classes for reflection
-    * @return auth config item for the MP-JWT auth method and realm
-    * @throws Exception
-    */
-    @BuildStep
-    @Record(ExecutionTime.STATIC_INIT)
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    AuthConfigBuildItem configureOIDCRealmAuthConfig(OIDCRecorder recorder, BuildProducer<ObjectSubstitutionBuildItem> objectSubstitution, BuildProducer<SecurityRealmBuildItem> securityRealm, BeanContainerBuildItem container, BuildProducer<ReflectiveClassBuildItem> reflectiveClasses) throws Exception {
-        if (config.enabled) {
-            // RSAPublicKey needs to be serialized
-            //ObjectSubstitutionBuildItem.Holder pkHolder = new ObjectSubstitutionBuildItem.Holder(RSAPublicKey.class, PublicKeyProxy.class, PublicKeySubstitution.class);
-            //ObjectSubstitutionBuildItem pkSub = new ObjectSubstitutionBuildItem(pkHolder);
-            //objectSubstitution.produce(pkSub);
+	/**
+	* Configure a TokenSecurityRealm if enabled
+	*
+	* @param recorder - jwt runtime recorder
+	* @param securityRealm - producer used to register the TokenSecurityRealm
+	* @param container - the BeanContainer for creating CDI beans
+	* @param reflectiveClasses - producer to register classes for reflection
+	* @return auth config item for the MP-JWT auth method and realm
+	* @throws Exception
+	*/
+	@BuildStep
+	@Record(ExecutionTime.STATIC_INIT)
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	AuthConfigBuildItem configureOIDCRealmAuthConfig(OIDCRecorder recorder, BuildProducer<ObjectSubstitutionBuildItem> objectSubstitution, BuildProducer<SecurityRealmBuildItem> securityRealm, BeanContainerBuildItem container, BuildProducer<ReflectiveClassBuildItem> reflectiveClasses) throws Exception {
+		if (config.enabled) {
+			// RSAPublicKey needs to be serialized
+			//ObjectSubstitutionBuildItem.Holder pkHolder = new ObjectSubstitutionBuildItem.Holder(RSAPublicKey.class, PublicKeyProxy.class, PublicKeySubstitution.class);
+			//ObjectSubstitutionBuildItem pkSub = new ObjectSubstitutionBuildItem(pkHolder);
+			//objectSubstitution.produce(pkSub);
 
-            RuntimeValue<SecurityRealm> realm = recorder.createTokenRealm(container.getValue());
-            AuthConfig authConfig = new AuthConfig();
-            authConfig.setAuthMechanism(config.authMechanism);
-            authConfig.setRealmName(config.realmName);
-            securityRealm.produce(new SecurityRealmBuildItem(realm, authConfig));
+			RuntimeValue<SecurityRealm> realm = recorder.createTokenRealm(container.getValue());
+			AuthConfig authConfig = new AuthConfig();
+			authConfig.setAuthMechanism(config.authMechanism);
+			authConfig.setRealmName(config.realmName);
+			securityRealm.produce(new SecurityRealmBuildItem(realm, authConfig));
 
-            reflectiveClasses.produce(new ReflectiveClassBuildItem(false, false, JsonProviderImpl.class.getName()));
-            reflectiveClasses.produce(new ReflectiveClassBuildItem(false, false, ClaimAttributes.class.getName()));
-            reflectiveClasses.produce(new ReflectiveClassBuildItem(false, false, ElytronJwtCallerPrincipal.class.getName()));            
+			reflectiveClasses.produce(new ReflectiveClassBuildItem(false, false, JsonProviderImpl.class.getName()));
+			reflectiveClasses.produce(new ReflectiveClassBuildItem(false, false, ClaimAttributes.class.getName()));
+			reflectiveClasses.produce(new ReflectiveClassBuildItem(false, false, ElytronJwtCallerPrincipal.class.getName()));
 
-            return new AuthConfigBuildItem(authConfig);
-        }
-        return null;
-    }
+			return new AuthConfigBuildItem(authConfig);
+		}
+		return null;
+	}
 
-    /**
-     * Create the JwtIdentityManager
-     *
-     * @param recorder - jwt runtime recorder
-     * @param securityDomain - the previously created TokenSecurityRealm
-     * @param identityManagerProducer - producer for the identity manager
-     */
-    @BuildStep
-    @Record(ExecutionTime.STATIC_INIT)
-    void configureIdentityManager(OIDCRecorder recorder, SecurityDomainBuildItem securityDomain, BuildProducer<IdentityManagerBuildItem> identityManagerProducer) {
-        if (config.enabled) {
-            IdentityManager identityManager = recorder.createIdentityManager(securityDomain.getSecurityDomain());
-            identityManagerProducer.produce(new IdentityManagerBuildItem(identityManager));
-        }
-    }
+	/**
+	 * Create the JwtIdentityManager
+	 *
+	 * @param recorder - jwt runtime recorder
+	 * @param securityDomain - the previously created TokenSecurityRealm
+	 * @param identityManagerProducer - producer for the identity manager
+	 */
+	@BuildStep
+	@Record(ExecutionTime.STATIC_INIT)
+	void configureIdentityManager(OIDCRecorder recorder, SecurityDomainBuildItem securityDomain, BuildProducer<IdentityManagerBuildItem> identityManagerProducer) {
+		if (config.enabled) {
+			IdentityManager identityManager = recorder.createIdentityManager(securityDomain.getSecurityDomain());
+			identityManagerProducer.produce(new IdentityManagerBuildItem(identityManager));
+		}
+	}
 
-    /**
-     * Register the MP-JWT authentication servlet extension
-     *
-     * @param recorder - jwt runtime recorder
-     * @param container - the BeanContainer for creating CDI beans
-     * @return servlet extension build item
-     */
-    @BuildStep
-    @Record(ExecutionTime.STATIC_INIT)
-    ServletExtensionBuildItem registerOIDCAuthExtension(OIDCRecorder recorder, BeanContainerBuildItem container) throws Exception {
-        log.debugf("registerOIDCAuthExtension");
-        //configure AuthContextInfo bean in same step as AuthExtension so that it is available for injection. Quarkus beans are scoped by step and proxy would be needed if bean was added in another step.
-        recorder.staticInitAuthContextInfo(container.getValue(), config);
-        ServletExtension authExt = recorder.createAuthExtension(config.authMechanism, container.getValue());
-        ServletExtensionBuildItem sebi = new ServletExtensionBuildItem(authExt);
-        return sebi;
-    }
+	/**
+	 * Register the MP-JWT authentication servlet extension
+	 *
+	 * @param recorder - jwt runtime recorder
+	 * @param container - the BeanContainer for creating CDI beans
+	 * @return servlet extension build item
+	 */
+	@BuildStep
+	@Record(ExecutionTime.STATIC_INIT)
+	ServletExtensionBuildItem registerOIDCAuthExtension(OIDCRecorder recorder, BeanContainerBuildItem container) throws Exception {
+		log.debugf("registerOIDCAuthExtension");
+		if (config.enabled) {
+			//configure AuthContextInfo bean in same step as AuthExtension so that it is available for injection. Quarkus beans are scoped by step and proxy would be needed if bean was added in another step.
+			recorder.staticInitAuthContextInfo(container.getValue(), config);
+			ServletExtension authExt = recorder.createAuthExtension(config.authMechanism, container.getValue());
+			ServletExtensionBuildItem sebi = new ServletExtensionBuildItem(authExt);
+			return sebi;
+		}
+		return null;
+	}
 
-    //native https is enabled so all providers are included in native image so this is redundant
-    @BuildStep
-    @Record(ExecutionTime.STATIC_INIT)
-    void registerRSASigProvider(BuildProducer<JCAProviderBuildItem> jcaProviderProducer) {
-        jcaProviderProducer.produce(new JCAProviderBuildItem(config.rsaSigProvider));
-        //having JCE provider available causes undertow native image build error, exclude for now and don't encrypt state.
-        //jcaProviderProducer.produce(new JCAProviderBuildItem(config.aesCryptProvider));
+	//native https is enabled so all providers are included in native image so this is redundant
+	@BuildStep
+	@Record(ExecutionTime.STATIC_INIT)
+	void registerRSASigProvider(BuildProducer<JCAProviderBuildItem> jcaProviderProducer) {
+		jcaProviderProducer.produce(new JCAProviderBuildItem(config.rsaSigProvider));
+		//having JCE provider available causes undertow native image build error, exclude for now and don't encrypt state.
+		//jcaProviderProducer.produce(new JCAProviderBuildItem(config.aesCryptProvider));
 
-    }
+	}
 
-    @BuildStep
-    @Record(ExecutionTime.RUNTIME_INIT)
-    void initOIDCAuthExtension(OIDCRecorder recorder, BeanContainerBuildItem container) throws Exception {
-        log.debugf("initOIDCAuthExtension");
-        recorder.runtimeInitAuthContextInfo(container.getValue(), config);
+	@BuildStep
+	@Record(ExecutionTime.RUNTIME_INIT)
+	void initOIDCAuthExtension(OIDCRecorder recorder, BeanContainerBuildItem container) throws Exception {
+		log.debugf("initOIDCAuthExtension");
+		if (config.enabled) {
+			recorder.runtimeInitAuthContextInfo(container.getValue(), config);
+		}
 
-    }
+	}
 
 }

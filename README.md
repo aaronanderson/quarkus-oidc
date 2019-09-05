@@ -24,7 +24,17 @@ In this mode it is expected that a sticky load balancer be configured to ensure 
 
 Note that cookies are required for browser based authentication because by default browsers will automically include same domain cookies in all requests.
 
-Finally this extensions extends the SmallRye JWT Quarkus extension so bearer JWT token authentication will still work if a token is present. 
+Finally this extensions extends the SmallRye JWT Quarkus extension so bearer JWT token authentication will still work if a token is present.
+
+This extension sets the SmallRye JWT publicKeyLocation setting and SmallRye JWT dynamically downloads signing keys at runtime. SmallRye JWT should gracefully handle JWT key rotation.
+
+The following settings control session management:
+
+* quarkus.oidc.session-enabled - defaults to true - use traditional Jakarta EE HTTP sessions tracked with the JSESSIONID cookie. If set to false the access_token JWT cookie will be set instead.  
+
+* quarkus.oidc.sync-session-expiration - defaults to false - sync the Jakarta EE HTTP session with JWT expiration time. If the cached JWT token expires the session will cleared and reauthentication required.
+
+* quarkus.oidc.default-session-timeout - 30 minutes - Jakarta EE HTTP session maximum idle time.
 
 
 ## Configuration
@@ -57,7 +67,7 @@ quarkus.oidc.security-constraints.1.web-resources=/*
 #quarkus.oidc.client-secret=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX 
 `
 
-* quarkus.oidc.realm-name - label for the JavaEE security realm. In Quarkus this has little effect.
+* quarkus.oidc.realm-name - label for the Jakarta EE security realm. In Quarkus this has little effect.
 
 * quarkus.oidc.security-constraints.1.roles and quarkus.oidc.security-constraints.1.web-resources - One or more web constraint rules for securing protected web resources by role
 

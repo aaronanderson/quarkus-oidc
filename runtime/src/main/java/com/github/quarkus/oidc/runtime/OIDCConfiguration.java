@@ -109,6 +109,19 @@ public class OIDCConfiguration {
      */
     @ConfigItem(defaultValue = "true")
     public boolean sessionEnabled;
+    
+    /**
+     * Synchronize the authentication session with the JWT token expiration time
+     */
+    @ConfigItem(defaultValue = "false")
+    public boolean syncSessionExpiration;
+    
+    
+    /**
+     * Default session timeout
+     */
+    @ConfigItem(defaultValue = "30")
+    public int defaultSessionTimeout;
 
     /**
      * List of protected web resources 

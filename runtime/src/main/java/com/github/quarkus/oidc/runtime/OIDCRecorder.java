@@ -96,6 +96,8 @@ public class OIDCRecorder {
         authContextInfo.setAuthMechanism(config.authMechanism);
         authContextInfo.setRedirectPath(config.redirectPath);
         authContextInfo.setSessionEnabled(config.sessionEnabled);
+        authContextInfo.setSyncSessionExpiration(config.syncSessionExpiration);
+        authContextInfo.setDefaultSessionTimeout(config.defaultSessionTimeout);
 
         authContextInfo.setSecurityConstraints(new ArrayList<>(config.securityConstraints.size()));
         for (Map.Entry<String, SecurityConstraintConfig> securityConfig : config.securityConstraints.entrySet()) {
