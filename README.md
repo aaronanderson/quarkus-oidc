@@ -28,7 +28,6 @@ In a classical secured web application a user is authenticated and a stateful se
 
 Finally this extensions extends the SmallRye JWT Quarkus extension so bearer JWT token authentication will still work if a token is present. 
 
-
 ## Configuration
 
 ### Maven
@@ -101,3 +100,9 @@ Set quarkus.oidc.default-claims.enabled to true to enabled this feature. Adjust 
 ```
 
 `mvn complie quarkus:dev -Dquarkus.profile=dev`
+
+## Native packaging
+
+After much painful trial and error this extension was successfully tested with native packaging. Currently GRAALVM only supports JDK 8 so the project must be built and packaged with that specific version. Also if an OIDC IDP issuer is configured the extension downloads the metadata at runtime so the [SunCE](https://quarkus.io/guides/native-and-ssl-guide#the-sunec-library-and-friends) native library path must be specified i.e.
+
+`./target/quarkus-react-example-2019.9.0-SNAPSHOT-runner -Djava.library.path=$GRAALVM_HOME/jre/lib/amd64  -Djavax.net.ssl.trustStore=$GRAALVM_HOME/jre/lib/security/cacerts`
