@@ -12,6 +12,8 @@ While this approach is extremely efficient for public facing applications it is 
 
 This extension solves this concern by enforcing authentication on all requests to protected resources in Quarkus.
 
+An [example](/example) application is provided to demostrate how the extension could be used.
+
 ## Session Management
 
 In a classical secured web application a user is authenticated and a stateful session token is established. Since storing stateful session in a Microservices container instance goes against convention this extension offers two ways of handling sessions:
