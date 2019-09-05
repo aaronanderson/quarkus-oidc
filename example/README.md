@@ -6,9 +6,11 @@ This example illustrates how to add, configure, and run the Quarkus OIDC extensi
 
 Ensure NodeJS and yarn are installed.
 
-`yarn
+```
+yarn
 yarn build
-mvn compile quarkus:dev`
+mvn compile quarkus:dev
+```
 
 
 run the following command to monitor for local file changes and automatically trigger a webpack build:
@@ -31,9 +33,11 @@ Optionally comment or remove all of the other default-claim lines.
 
 and then properly configure the lines:
 
-`quarkus.oidc.issuer=
+```
+quarkus.oidc.issuer=
 quarkus.oidc.client-id= 
-quarkus.oidc.client-secret= `
+quarkus.oidc.client-secret= 
+```
 
 Also be sure to skip tests when running the example application with an OIDC IDP configured since the rest client cannot perform OIDC browser based authentication and automated tests will fail:
 
@@ -44,7 +48,7 @@ Also be sure to skip tests when running the example application with an OIDC IDP
 
 Below is an example of how to setup a new React JS application
 
-`
+```
 mvn io.quarkus:quarkus-maven-plugin:0.21.1:create \
     -DprojectGroupId=com.github.quarkus.oidc \
     -DprojectArtifactId=example \
@@ -64,21 +68,21 @@ yarn add axios
 yarn add --dev autoprefixer
 yarn add --dev file-loader html-loader
 
-\#typescript support
+#typescript support
 yarn add --dev @types/react @types/react-dom
 yarn add --dev typescript ts-loader source-map-loader
 yarn add @types/reach__router @types/react-router-dom
-`
+```
 
 Edit the `webpack.config.js` and `tsconfig.json` file and set the custom source and build paths as needed to support the maven project layout.
 
 react-scripts could be used to generate a sample project but in order to configure custom source and paths the eject command should be run to expose all the configuration files for modification. A large number of modules are referenced and it may be excessive for most projects.
 
-`cd example    
+```
+cd example    
 npx create-react-app quarkus-react
 mv quarkus-react/src*/ src/main/web
 mv quarkus-react/* quarkus-react/.* .
 yarn build
 yarn eject
-
-`
+```
