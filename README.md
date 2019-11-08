@@ -1,5 +1,5 @@
 ##Deprecated
-Quarkus now includes a fully functional OIDC extension that supports web application and the authorization code flow. Additionally I am upgrading my application to use AWS ECS Fargate and I will be moving the OIDC authentication enforcement to an (ALB)[https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-authenticate-users.html] and leveraging the quarkus quarkus-smallrye-jwt extension.
+Quarkus now includes a fully functional OIDC extension that supports web application and the authorization code flow. Additionally I am upgrading my application to use AWS ECS Fargate and I will be moving the OIDC authentication enforcement to an [ALB](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-authenticate-users.html) and leveraging the quarkus quarkus-smallrye-jwt extension.
 
 
 
