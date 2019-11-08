@@ -1,3 +1,8 @@
+##Deprecated
+Quarkus now includes a fully functional OIDC extension that supports web application and the authorization code flow. Additionally I am upgrading my application to use AWS ECS Fargate and I will be moving the OIDC authentication enforcement to an (ALB)[https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-authenticate-users.html] and leveraging the quarkus quarkus-smallrye-jwt extension.
+
+
+
 ## Overview
 
 [Quarkus](https://quarkus.io) is a flexible Java Microservices container that supports the [Eclipse Microprofile](https://microprofile.io/) standard and can  be compiled to a native executable via [GRAALVM](https://graalvm.org) for inclusion in a [Docker container](https://www.docker.com/resources/what-container).   
